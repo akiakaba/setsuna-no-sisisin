@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div>
+      Click the button or push <code class="keyname">space</code> key ASAP.
+    </div>
     <button v-show="displayStart" @click="start">Start</button>
     <button v-show="displayStrike" @click="strike">Strike!!!</button>
     <div v-show="!!message">{{ message }}</div>
@@ -7,7 +10,8 @@
       class="keyBindInput"
       ref="keyBindInput"
       type="text"
-      @keydown="keydown"
+      @keydown.space="keydown"
+      @keyup.space="keyup"
     />
   </div>
 </template>
@@ -24,8 +28,10 @@ export default Vue.extend({
     return {
       state: "initial" as State,
       message: "",
+      keyready: true,
       timer: {
         begin: 0,
+        opponentHandle: 0,
       },
     };
   },
@@ -35,6 +41,9 @@ export default Vue.extend({
     },
     displayStrike(): boolean {
       return ["ready", "contest"].includes(this.state);
+    },
+    opponentSkillTime(): number {
+      return 300;
     },
   },
   methods: {
@@ -48,6 +57,9 @@ export default Vue.extend({
         this.state = "contest";
         this.message = "Go!!!";
         this.timer.begin = new Date().getTime();
+        this.timer.opponentHandle = setTimeout(() => {
+          this.stricken();
+        }, this.opponentSkillTime);
       };
       setTimeout(go, delayMs);
     },
@@ -55,11 +67,24 @@ export default Vue.extend({
       if (this.state === "contest") {
         this.state = "victory";
         const score = new Date().getTime() - this.timer.begin;
-        this.message = `${score} ms`;
+        this.message = `WIN: ${score} ms`;
+      }
+    },
+    stricken: function () {
+      if (this.state === "contest") {
+        this.state = "defeat";
+        const score = new Date().getTime() - this.timer.begin;
+        this.message = `LOSE: ${score} ms`;
       }
     },
     keydown: function () {
-      this.strike();
+      if (this.keyready) {
+        this.keyready = false;
+        this.strike();
+      }
+    },
+    keyup: function () {
+      this.keyready = true;
     },
   },
 });
@@ -67,12 +92,20 @@ export default Vue.extend({
 
 <style>
 #app {
+  font-size: 2rem;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+button {
+  font-size: 2rem;
+}
 
+.keyname {
+  background-color: lightgray;
+  border: solid 1px gray;
+}
 .keyBindInput {
   position: absolute;
   top: -10000px;
