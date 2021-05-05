@@ -7,8 +7,14 @@
       <Finish v-if="state === 'finish'" />
       <template v-else>
         <div v-show="!!(currentStage + 1)">Stage: {{ currentStage + 1 }}</div>
-        <div v-show="showResult">{{ result }}</div>
         <ReadyGo class="ready-go" :state="readyGo" />
+        <Character
+          class="character-area"
+          :state="characterState"
+          left="sisisin.jpg"
+          :right="currentOpponent && currentOpponent.image"
+        />
+        <div class="result" v-show="showResult">{{ result }}</div>
       </template>
     </div>
     <div class="control-area">
@@ -37,6 +43,7 @@ import Vue from "vue";
 import { opponents, Opponent } from "./data";
 import ReadyGo, { ReadyGoState } from "./components/ReadyGo.vue";
 import Finish from "./components/Finish.vue";
+import Character, { CharacterState } from "./components/Character.vue";
 
 const states = [
   "initial",
@@ -65,10 +72,13 @@ export default Vue.extend({
   },
   computed: {
     showStart(): boolean {
-      return ["initial", "defeat", "finish"].includes(this.state);
+      return ["initial", "defeat"].includes(this.state);
     },
     showNext(): boolean {
       return this.state === "victory";
+    },
+    showReturnTitle(): boolean {
+      return this.state === "finish";
     },
     showResult(): boolean {
       return ["victory", "defeat"].includes(this.state);
@@ -88,11 +98,28 @@ export default Vue.extend({
     currentOpponent(): Opponent {
       return opponents[this.currentStage];
     },
+    characterState(): CharacterState {
+      switch (this.state) {
+        case "ready":
+        case "contest":
+          return "init";
+        case "victory":
+          return "left-win";
+        case "defeat":
+          return "right-win";
+        default:
+          return "none";
+      }
+    },
   },
   methods: {
     next: function () {
       (this.$refs.keyBindInput as HTMLElement).focus();
-      if (this.state === "finish") {
+      if (this.state === "defeat") {
+        this.currentStage = -1;
+        this.state = "initial";
+        this.readyGo = "none";
+      } else if (this.state === "finish") {
         this.currentStage = -1;
         this.state = "initial";
         this.readyGo = "none";
@@ -142,6 +169,7 @@ export default Vue.extend({
   components: {
     ReadyGo,
     Finish,
+    Character,
   },
 });
 </script>
@@ -176,8 +204,19 @@ body {
   width: 80vw;
 }
 .ready-go {
-  position: relative;
-  top: 50%;
+  position: absolute;
+  top: 20vh;
+  width: 100%;
+}
+.character-area {
+  position: absolute;
+  top: 20vh;
+  width: 100%;
+}
+.result {
+  position: absolute;
+  top: 30vh;
+  width: 100%;
 }
 .control-area {
   width: 100vw;
