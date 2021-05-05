@@ -1,6 +1,9 @@
 <template>
   <div id="app" :class="{ shakin: shakesView }">
     <div class="visual-area">
+      <div class="title-area" v-if="state === 'initial'">
+        <img class="title" src="setsuna_title.png" />
+      </div>
       <Finish v-if="state === 'finish'" />
       <template v-else>
         <div v-show="!!(currentStage + 1)">Stage: {{ currentStage + 1 }}</div>
@@ -164,6 +167,13 @@ body {
 .visual-area {
   width: 100vw;
   height: 80vh;
+}
+.title-area {
+  width: 100%;
+  background-color: #343434;
+}
+.title {
+  width: 80vw;
 }
 .ready-go {
   position: relative;
