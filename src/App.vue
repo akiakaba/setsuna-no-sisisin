@@ -148,11 +148,14 @@ export default Vue.extend({
   padding: 0;
   margin: 0;
 }
+body {
+  background-color: rgb(40, 40, 40);
+  color: #b5b5b5;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   text-align: center;
 }
 .shakin {
@@ -172,6 +175,7 @@ export default Vue.extend({
 }
 button {
   font-size: 2rem;
+  background-color: darkgrey;
   padding: 0.2em 1em;
 }
 .description {
@@ -180,8 +184,8 @@ button {
   padding: 0.5rem;
 }
 .keyname {
-  background-color: lightgray;
-  border: solid 1px gray;
+  background-color: rgb(75, 75, 75);
+  border: solid 1px lightgray;
   padding: 0.2em 0.5em;
 }
 .keyBindInput {
