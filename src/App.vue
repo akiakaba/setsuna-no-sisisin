@@ -42,8 +42,8 @@
 import Vue from "vue";
 import { opponents, Opponent } from "./data";
 import ReadyGo, { ReadyGoState } from "./components/ReadyGo.vue";
-import Finish from "./components/Finish.vue";
-import Character, { CharacterState } from "./components/Character.vue";
+import Finish from "./components/FinishView.vue";
+import Character, { CharacterState } from "./components/CharacterView.vue";
 
 const states = [
   "initial",

@@ -11,7 +11,7 @@ const states = ["none", "init", "left-win", "right-win"] as const;
 export type CharacterState = typeof states[number];
 
 export default Vue.extend({
-  name: "Character",
+  name: "CharacterView",
   computed: {
     shows: function () {
       return this.state !== "none";
